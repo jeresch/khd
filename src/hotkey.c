@@ -301,6 +301,21 @@ HotkeysAreEqual(struct hotkey *A, struct hotkey *B)
 }
 
 internal bool
+HotkeyActiveApp(struct hotkey *HK)
+{
+    char **app = HK->App;
+    if(*app == NULL)
+        return true;
+    while(*app)
+    {
+        if(strcmp(*app, FocusedApp) == 0)
+            return true;
+        app++;
+    }
+    return false;
+}
+
+internal bool
 HotkeyExists(struct hotkey *Seek, struct hotkey **Result, const char *Mode)
 {
     struct mode *BindingMode = GetBindingMode(Mode);
@@ -309,7 +324,7 @@ HotkeyExists(struct hotkey *Seek, struct hotkey **Result, const char *Mode)
         struct hotkey *Hotkey = BindingMode->Hotkey;
         while(Hotkey)
         {
-            if(HotkeysAreEqual(Hotkey, Seek))
+            if(HotkeysAreEqual(Hotkey, Seek) && HotkeyActiveApp(Hotkey))
             {
                 *Result = Hotkey;
                 return true;
