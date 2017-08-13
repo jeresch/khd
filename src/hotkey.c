@@ -324,7 +324,8 @@ HotkeyExists(struct hotkey *Seek, struct hotkey **Result, const char *Mode)
         struct hotkey *Hotkey = BindingMode->Hotkey;
         while(Hotkey)
         {
-            if(HotkeysAreEqual(Hotkey, Seek) && HotkeyActiveApp(Hotkey))
+            if(HotkeysAreEqual(Hotkey, Seek)
+                    && (HotkeyActiveApp(Hotkey) || Hotkey->Type != Hotkey_Include))
             {
                 *Result = Hotkey;
                 return true;
